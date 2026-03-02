@@ -147,12 +147,32 @@ jobs:
           path: ${{ runner.temp }}/exported/*.ipa
 
       - name: Upload app to BrowserStack
+        id: browserstack_upload
         env:
           BROWSERSTACK_USERNAME: ${{ secrets.BROWSERSTACK_USERNAME }}
           BROWSERSTACK_ACCESS_KEY: ${{ secrets.BROWSERSTACK_ACCESS_KEY }}
         run: |
+          set -euo pipefail
           IPA_PATH="$(ls "$RUNNER_TEMP"/exported/*.ipa | head -n 1)"
-          curl -u "${BROWSERSTACK_USERNAME}:${BROWSERSTACK_ACCESS_KEY}" \
+          RESPONSE_JSON="$(curl -sS -u "${BROWSERSTACK_USERNAME}:${BROWSERSTACK_ACCESS_KEY}" \
             -X POST "https://api-cloud.browserstack.com/app-live/upload" \
             -F "file=@${IPA_PATH}" \
-            -F "custom_id=kmpdemo-ios-latest"
+            -F "custom_id=kmpdemo-ios-latest")"
+
+          APP_URL="$(echo "$RESPONSE_JSON" | sed -n 's/.*"app_url":"\([^"]*\)".*/\1/p')"
+
+          if [ -z "$APP_URL" ]; then
+            echo "::error::BrowserStack upload failed. Response: $RESPONSE_JSON"
+            exit 1
+          fi
+
+          echo "app_url=$APP_URL" >> "$GITHUB_OUTPUT"
+          echo "Uploaded app_url: $APP_URL"
+
+      - name: Publish BrowserStack links
+        run: |
+          echo "## BrowserStack Upload Complete" >> "$GITHUB_STEP_SUMMARY"
+          echo "" >> "$GITHUB_STEP_SUMMARY"
+          echo "- BrowserStack app_url: \`${{ steps.browserstack_upload.outputs.app_url }}\`" >> "$GITHUB_STEP_SUMMARY"
+          echo "- Open App Live dashboard: https://app-live.browserstack.com/dashboard" >> "$GITHUB_STEP_SUMMARY"
+          echo "- Uploaded as custom id: \`kmpdemo-ios-latest\`" >> "$GITHUB_STEP_SUMMARY"
