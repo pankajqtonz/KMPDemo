@@ -1,0 +1,25 @@
+<resources>
+    <string name="ai_voice_cloning">AI Voice Cloning</string>
+    <string name="clone_your_voice_with_ai_for_natural_and_realistic_speech">Clone your voice with
+        AI for natural and realistic speech.
+    </string>
+    <string name="start_cloning">Start Cloning</string>
+    <string name="turn_any_text_into_lifelike_speech_using_smart_voice_styles">Turn any text into
+        lifelike speech using smart voice styles.
+    </string>
+    <string name="sound_effects">Sound Effects</string>
+    <string name="add_fun_voice_effects_like_robot_echo_or_cartoon">Add fun voice effects like
+        robot, echo, or cartoon.
+    </string>
+    <string name="create_music_from_your_words_using_ai_fun_and_fast">Create music from your words
+        using AI—fun and fast.
+    </string>
+    <string name="speech_to_text">Speech to Text</string>
+    <string name="speak_and_convert_your_voice_into_accurate_text">Speak and convert your voice into
+        accurate text.
+    </string>
+    <string name="my_history">My History</string>
+    <string name="view_and_manage_your_saved_voice_and_music_files">View and manage your saved voice
+        and music files.
+    </string>
+</resources>
