@@ -78,19 +78,11 @@ jobs:
         run: |
           set -euo pipefail
 
-          decode_b64() {
-            if base64 --help >/dev/null 2>&1; then
-              base64 --decode
-            else
-              base64 -D
-            fi
-          }
-
           CERT_PATH="$RUNNER_TEMP/signing_cert.p12"
           PROFILE_PATH="$RUNNER_TEMP/profile.mobileprovision"
 
-          printf '%s' "$IOS_CERTIFICATE_P12_BASE64" | decode_b64 > "$CERT_PATH"
-          printf '%s' "$IOS_PROVISIONING_PROFILE_BASE64" | decode_b64 > "$PROFILE_PATH"
+          printf '%s' "$IOS_CERTIFICATE_P12_BASE64" | tr -d '\r\n' | base64 -D > "$CERT_PATH"
+          printf '%s' "$IOS_PROVISIONING_PROFILE_BASE64" | tr -d '\r\n' | base64 -D > "$PROFILE_PATH"
 
           openssl pkcs12 -in "$CERT_PATH" -noout -passin "pass:$IOS_CERTIFICATE_PASSWORD" >/dev/null
 
